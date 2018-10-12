@@ -15,15 +15,16 @@ if [ $(uname) != "Darwin" ];then
     sedcmd='sed -i'
 fi
 
-$sedcmd "s|absProject=\"\"|absProject=\"$1\"|g" gentreehtml.sh
-$sedcmd "s|abs_CodeCoverage_info_cleaned=\"\"|abs_CodeCoverage_info_cleaned=\"$2\"|g" gentreehtml.sh
-$sedcmd "s|abs_CodeCoverageReport=\"\"|abs_CodeCoverageReport=\"$3\"|g" gentreehtml.sh
+cp ./gentreehtml.sh ./gentreehtml
+$sedcmd "s|absProject=\"\"|absProject=\"$1\"|g" gentreehtml
+$sedcmd "s|abs_CodeCoverage_info_cleaned=\"\"|abs_CodeCoverage_info_cleaned=\"$2\"|g" gentreehtml
+$sedcmd "s|abs_CodeCoverageReport=\"\"|abs_CodeCoverageReport=\"$3\"|g" gentreehtml
 if [ -n $4 ];then
-    $sedcmd "s|outhtml=\"\"|outhtml=\"$4\"|g" gentreehtml.sh
+    $sedcmd "s|covtree.html|$4|g" gentreehtml
 fi
 
 if [ -n $5 ];then
-    $sedcmd "s|title=\"\"|title=\"$5\"|g" gentreehtml.sh
+    $sedcmd "s|Coverage Report|$5|g" gentreehtml
 fi
 
-echo "install done"
+echo "gentreehtml install done"
