@@ -14,7 +14,7 @@ absProject=""
 abs_CodeCoverage_info_cleaned=""
 abs_CodeCoverageReport=""
 outhtml="covtree.html"
-title="Coverage Report"
+title="CovReport"
 ##
 
 CC=clang++

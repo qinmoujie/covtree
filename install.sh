@@ -24,7 +24,7 @@ if [ -n $4 ];then
 fi
 
 if [ -n $5 ];then
-    $sedcmd "s|Coverage Report|$5|g" gentreehtml
+    $sedcmd "s|CovReport|$5|g" gentreehtml
 fi
 
 echo "gentreehtml install done"
