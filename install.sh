@@ -10,8 +10,6 @@ if [ $# -lt 3 ];then
     exit 1
 fi
 
-git clone git@github.com:qinmoujie/covtree.git
-cd covtree
 sedcmd="sed -i ''"
 if [ $(uname) != "Darwin" ];then
     sedcmd='sed -i'
