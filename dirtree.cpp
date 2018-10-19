@@ -123,13 +123,18 @@ class Dirtree {
     ouf.setf(ios::fixed);
     ouf << setprecision(1);
     ouf << "<body>\n\t<div class=\"tree\">\n\t\t<ul>" << endl;
+
     ptr_node_type start_root = root;
     string par = "";
-    for (; start_root->child.size() == 1;) {
-      par.append("/").append(start_root->filenode.file);
+    if (root->child.size() == 1) {
       start_root = start_root->child.front();
+      for (; start_root->child.size() == 1;) {
+        par.append("/").append(start_root->filenode.file);
+        start_root = start_root->child.front();
+      }
     }
     genhtml_imple(ouf, start_root, par, 3);
+
     ouf << "\t\t</ul>\n\t</div>" << endl;
     ouf << "<script>$(\"ul>li\").not(\":eq(0)\").hide()</script>" << endl;
     ouf << "</body>" << endl;
@@ -139,6 +144,7 @@ class Dirtree {
  private:
   void genhtml_imple(ofstream &ouf, const ptr_node_type cur, string parpath,
                      size_t dep) {
+    if (parpath == "//") parpath = "";
     if (ignorePar == true) {
       if (parpath == project) parpath = "";
     }
