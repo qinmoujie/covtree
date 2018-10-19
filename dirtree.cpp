@@ -74,17 +74,15 @@ class Dirtree {
  public:
   typedef treenode::ptr_node_type ptr_node_type;
   Dirtree(const string &project, const vector<fileCovInfo> &coverageinfo,
-          const string &absCovpath)
-      : project(project), absCovpath(absCovpath) {
+          const string &absCovpath, bool ignorePar)
+      : project(project), absCovpath(absCovpath), ignorePar(ignorePar) {
+    root = new treenode("/", 0, 0, 0, 0, false);
     for (size_t i = 0; i != coverageinfo.size(); ++i) {
       ptr_node_type cur = root;
       vector<string> nodefile = getnodefile(coverageinfo[i].file);
       for (size_t j = 0; j != nodefile.size(); ++j) {
         const string &fd = nodefile[j];
-        if (root == nullptr) {
-          root = new treenode(fd, 0, 0, 0, 0, false);
-          cur = root;
-        } else if (cur->filenode.file != fd) {
+        if (cur->filenode.file != fd) {
           bool flag = false;
           for (const ptr_node_type &ptr : cur->child) {
             if (ptr->filenode.file == fd) {
@@ -141,7 +139,9 @@ class Dirtree {
  private:
   void genhtml_imple(ofstream &ouf, const ptr_node_type cur, string parpath,
                      size_t dep) {
-    if (parpath == project) parpath = "";
+    if (ignorePar == true) {
+      if (parpath == project) parpath = "";
+    }
     float funcrate = cur->filenode.FNF == 0
                          ? 0
                          : float(cur->filenode.FNH) / cur->filenode.FNF;
@@ -190,6 +190,7 @@ class Dirtree {
 
   vector<string> getnodefile(const string &filepath) {
     vector<string> result;
+    result.push_back("/");
     size_t start_pos = 0;
     for (size_t pos = 0; pos != string::npos;) {
       start_pos = pos + 1;
@@ -217,12 +218,14 @@ class Dirtree {
   string absCovpath;
   string project;
   string ignore;
+  bool ignorePar;
 };
 
 int main(int argc, char *args[]) {
   vector<fileCovInfo> coverageinfo;
   if (parse_coverage_info_file(args[2], coverageinfo) == false) return 1;
-  Dirtree dtree(args[1], coverageinfo, args[3]);
-  if (dtree.genhtml(args[4]) == false) return 1;
+  Dirtree dtree(args[1], coverageinfo, args[3],
+                (string(args[4]) == "ignorePar"));
+  if (dtree.genhtml(args[5]) == false) return 1;
   return 0;
 }

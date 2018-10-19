@@ -5,9 +5,10 @@ sourcedir=$(cd $(dirname $0);pwd)
 
 print_help()
 {
-    echo -e "usage: ./gentreehtml.sh [-h] -s <project> -f <CodeCoverage.info.cleaned> -c <CodeCoverageReport> [-o <covtree.html>] [-t <title>]"
+    echo -e "usage: ./gentreehtml.sh [-h] [-i] -s <project> -f <CodeCoverage.info.cleaned> -c <CodeCoverageReport> [-o <covtree.html>] [-t <title>]"
     echo -e "Path of project is needed"
     echo -e "-h\t Print help"
+    echo -e "-i\t Ignore parent path of file index html in CodeCoverageReport"
     echo -e "-f\t Path of CodeCoverage.info.cleaned"
     echo -e "-c\t Path of CodeCoverageReport"
     echo -e "-o\t Name of out html file,option,default:covtree.html"
@@ -26,19 +27,22 @@ abs_CodeCoverage_info_cleaned=""
 abs_CodeCoverageReport=""
 outhtml="covtree.html"
 title="CovReport"
+ignorePar="notignorePar"
 ##
 if [[ -z $@ ]];then
     print_help
     exit 1;
 fi
 
-while getopts hs:f:c:o:t: opt
+while getopts his:f:c:o:t: opt
 do
     case "$opt" in
     h)
         print_help
         exit 0
         ;;
+    i)
+        ignorePar="ignorePar" ;;
     s)
         absProject=$OPTARG ;;
     f)
@@ -93,7 +97,7 @@ fi
 if [ ! -x dirtree ];then
     $CC -std=c++11 dirtree.cpp -o dirtree
 fi
-./dirtree $absProject $abs_CodeCoverage_info_cleaned $abs_CodeCoverageReport tree.html
+./dirtree $absProject $abs_CodeCoverage_info_cleaned $abs_CodeCoverageReport $ignorePar tree.html
 cat head.html | sed "s|Coverage Report|$title|g" > $outhtml
 cat tree.html >> $outhtml
 open $outhtml
