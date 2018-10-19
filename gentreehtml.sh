@@ -10,7 +10,7 @@ print_help()
     echo -e "-h\t Print help"
     echo -e "-f\t Path of CodeCoverage.info.cleaned"
     echo -e "-c\t Path of CodeCoverageReport"
-    echo -e "-o\t Path of out html file,option,default:covtree.html"
+    echo -e "-o\t Name of out html file,option,default:covtree.html"
     echo -e "-t\t Title of out html,option,default:Coverage Report"
 }
 
@@ -32,7 +32,7 @@ if [[ -z $@ ]];then
     exit 1;
 fi
 
-while getopts hs:f:c: opt
+while getopts hs:f:c:o:t: opt
 do
     case "$opt" in
     h)
